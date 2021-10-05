@@ -4,8 +4,8 @@ import * as THREE from 'three'
 import {COLOR_PALLETE} from "../constants/ColorPalet";
 
 interface Props {
-    vs: string,
-    fs: string,
+    vertexShader: string,
+    fragmentShader: string,
 }
 
 const hexToRgb = (color: string) => {
@@ -19,7 +19,7 @@ const hexToRgb = (color: string) => {
     ]
 }
 
-const ThreeRender = ({vs, fs}: Props) => {
+const ThreeRender = ({vertexShader, fragmentShader}: Props) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const INITIAL_TIME = 338.0; // MAGIC NUMBER
     const color1 = [...hexToRgb(COLOR_PALLETE.vividpurple)]
@@ -28,6 +28,8 @@ const ThreeRender = ({vs, fs}: Props) => {
 
 
     useEffect(() => {
+        if (!canvasRef.current) return
+
         const renderer = new THREE.WebGLRenderer({
             canvas: canvasRef.current,
             antialias: true,
@@ -63,8 +65,8 @@ const ThreeRender = ({vs, fs}: Props) => {
 
         const geometry = new THREE.PlaneGeometry(width, height, 1, 1)
         const material = new THREE.RawShaderMaterial({
-            vertexShader: vs,
-            fragmentShader: fs,
+            vertexShader,
+            fragmentShader,
             uniforms
         })
         const mesh = new THREE.Mesh(geometry, material)
@@ -79,9 +81,9 @@ const ThreeRender = ({vs, fs}: Props) => {
 
 
         const render = (t1: number) => {
-            const dur = 10000;           // [ms]
-            const dt = t1 - t0;         // [ms]
-            const t = (dt % dur) / dur;// [ms/ms] 0〜1の、のこぎり波
+            // const dur = 10000;           // [ms]
+            // const dt = t1 - t0;         // [ms]
+            // const t = (dt % dur) / dur;// [ms/ms] 0〜1の、のこぎり波
             if (t1) {
                 uniforms.uTime.value = INITIAL_TIME + t1 * 0.001
             }
@@ -94,9 +96,7 @@ const ThreeRender = ({vs, fs}: Props) => {
 
     }, [canvasRef])
     return (
-        <>
-            <canvas ref={canvasRef}/>
-        </>
+        <canvas ref={canvasRef}/>
     )
 }
 

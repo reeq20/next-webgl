@@ -6,7 +6,7 @@ import fragment from "../../glsl/gradBg/fragment.glsl";
 const GradBg: NextPage = () => {
     return (
         <>
-            <ThreeRender vs={vertex} fs={fragment}/>
+            <ThreeRender vertexShader={vertex} fragmentShader={fragment}/>
         </>
     )
 }
