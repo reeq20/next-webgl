@@ -1,30 +1,22 @@
 import {NextPage} from "next";
-import {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState} from "react";
 import * as THREE from 'three'
-import {COLOR_PALLETE} from "../constants/ColorPalet";
+import {COLOR_PALETTE} from "../constants/ColorPalette";
+import {hexToRgb} from "../utils/hexToRgb";
 
 interface Props {
     vertexShader: string,
     fragmentShader: string,
 }
 
-const hexToRgb = (color: string) => {
-    // #が先頭についてたら除去
-    const replacedColor = color.replace(/#/g, '')
 
-    return [
-        parseInt(replacedColor.substr(0, 2), 16),
-        parseInt(replacedColor.substr(2, 2), 16),
-        parseInt(replacedColor.substr(4, 2), 16)
-    ]
-}
 
-const ThreeRender = ({vertexShader, fragmentShader}: Props) => {
+const ThreeRender: React.FC<Props> = ({vertexShader, fragmentShader} ) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const INITIAL_TIME = 338.0; // MAGIC NUMBER
-    const color1 = [...hexToRgb(COLOR_PALLETE.vividpurple)]
-    const color2 = [...hexToRgb(COLOR_PALLETE.skyblue)]
-    const color3 = [...hexToRgb(COLOR_PALLETE.pinkred)]
+    const color1 = [...hexToRgb(COLOR_PALETTE.vividpurple)]
+    const color2 = [...hexToRgb(COLOR_PALETTE.skyblue)]
+    const color3 = [...hexToRgb(COLOR_PALETTE.pinkred)]
 
 
     useEffect(() => {
@@ -77,13 +69,7 @@ const ThreeRender = ({vertexShader, fragmentShader}: Props) => {
 
         scene.add(mesh);
 
-        const t0 = performance.now();
-
-
         const render = (t1: number) => {
-            // const dur = 10000;           // [ms]
-            // const dt = t1 - t0;         // [ms]
-            // const t = (dt % dur) / dur;// [ms/ms] 0〜1の、のこぎり波
             if (t1) {
                 uniforms.uTime.value = INITIAL_TIME + t1 * 0.001
             }
